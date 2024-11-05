@@ -24,7 +24,7 @@ with tab1:
             st.write("Data preview:")
             st.dataframe(data)
             buffer = data.info(buf=None)  # Capture the info output
-            st.text(buffer)
+            # st.text(buffer)
 
         else:
             st.warning("Silakan unggah file CSV terlebih dahulu")
