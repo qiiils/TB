@@ -26,10 +26,10 @@ with tab1:
         if data is not None:
             st.write("Data preview:")
             st.dataframe(data)
-            buffer = io.StringIO()
-            data.info(buf=buffer)
-            s = buffer.getvalue()
-            st.text(s)  
+            # buffer = io.StringIO()
+            # data.info(buf=buffer)
+            # s = buffer.getvalue()
+            # st.text(s)  
             # st.text(buffer)
 
         else:
