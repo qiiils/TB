@@ -25,7 +25,7 @@ if data is not None:
     except Exception as e:
         st.error(f"Error membaca file: {str(e)}")
 
-tab1, tab2, tab3 = st.tabs(["Display Data", "Pre-processing dan Analysis", "Visualization"])
+tab1, tab2, tab3, tab4 = st.tabs(["Display Data", "Pre-processing", "Analysis Data", "Visualization"])
 
 # Tab 1: Display data aja (optional)
 with tab1:
@@ -85,14 +85,45 @@ with tab2:
             else:
                 st.write("Tidak ditemukan missing value setelah dibersihkan.")
             
+            # Summary Data ---------------------------------------
+            st.subheader("Summary Dataset")
+            st.write("Dataset ini terdiri dari 378 baris dan 7 kolom. Atribut yang tersedia :")
+            st.write(" - Periode Data")
+            st.write(" - Wilayah")
+            st.write(" - Lokasi Pengaduan") 
+            st.write(" - Tanggal Pengaduan")
+            st.write(" - Asal Pengaduan")
+            st.write(" - Tanggal Pengaduan")
+            st.write(" - Jenis Kriminalitas")
+            st.write(" - Jumlah Pengaduan")
+
+            # Statistik Data -----------------------------------------------------
+            st.subheader("Statistik Deskriptif")
+            st.write(data_bersih.describe())
+            
+            # Tipe Data -------------------------------------------------------------------
+            st.subheader("Tipe Data Setiap Kolom")
+            st.write(data_bersih.dtypes)
+
+
+data_bersih1 = data_bersih
+
+
+#Tab 3
+with tab3:
+    if st.button("Analysis"):
+        if data_bersih1 is not None:
             #Clustering 
+            st.write(data_bersih.columns)
             if 'wilayah' in data_bersih.columns and 'jumlah_pengaduan' in data_bersih.columns:
                 # Agregasi data untuk mendapatkan total jumlah pengaduan per wilayah
-                total_pengaduan = data_bersih.groupby('wilayah', as_index=False)['jumlah_pengaduan'].sum()
+                total_pengaduan = data_bersih.groupby(['wilayah', 'jenis_kriminal'], as_index=False)['jumlah_pengaduan'].sum()
 
                 # Ubah kolom 'wilayah' menjadi nilai numerik menggunakan Label Encoding
-                le = LabelEncoder()
-                total_pengaduan['wilayah_encoded'] = le.fit_transform(total_pengaduan['wilayah'])
+                le_wilayah = LabelEncoder()
+                le_kriminalitas = LabelEncoder()
+                total_pengaduan['wilayah_encoded'] = le_wilayah.fit_transform(total_pengaduan['wilayah'])
+                total_pengaduan['jenis_kriminalitas_encoded'] = le_kriminalitas.fit_transform(total_pengaduan['jenis_kriminal'])
 
                 # Persiapkan fitur untuk clustering
                 X = total_pengaduan[['wilayah_encoded', 'jumlah_pengaduan']]
@@ -104,25 +135,32 @@ with tab2:
                 kmeans = KMeans(n_clusters=num_clusters, random_state=0)
                 total_pengaduan['cluster'] = kmeans.fit_predict(X)
 
-                # Buat dataframe keterangan wilayah
-                wilayah_map = total_pengaduan[['wilayah', 'wilayah_encoded']].drop_duplicates().sort_values(by='wilayah_encoded')
-
-                # Visualisasi hasil clustering
-                st.subheader("Hasil Clustering Berdasarkan Total Jumlah Pengaduan")
-                fig, ax = plt.subplots(figsize=(10, 6))
-                sns.scatterplot(data=total_pengaduan, x='wilayah_encoded', y='jumlah_pengaduan', hue='cluster', palette='viridis', ax=ax)
-                ax.set_title("Clustering Wilayah Berdasarkan Total Jumlah Pengaduan")
-                ax.set_xlabel("Wilayah (Encoded)")
-                ax.set_ylabel("Total Jumlah Pengaduan")
-                st.pyplot(fig)
-
-                # Tampilkan data dengan cluster
+                # Tampilkan data wilayah dan jenis kriminalitas yang terkluster
                 st.subheader("Data dengan Cluster")
                 st.write(total_pengaduan)
 
-                # Tampilkan keterangan kode wilayah
-                st.subheader("Keterangan Kode Wilayah")
-                st.write(wilayah_map)
+                # Buat dataframe keterangan wilayah
+                wilayah_map = total_pengaduan[['wilayah', 'wilayah_encoded']].drop_duplicates().sort_values(by='wilayah_encoded')
+
+                # Visualisasi hasil clustering berdasarkan wilayah dan jenis kriminalitas
+                st.subheader("Hasil Clustering Berdasarkan Wilayah dan Jenis Kriminalitas")
+                fig, ax = plt.subplots(figsize=(10, 6))
+                sns.scatterplot(data=total_pengaduan, x='wilayah_encoded', y='jenis_kriminalitas_encoded', size='jumlah_pengaduan', hue='cluster', palette='viridis', ax=ax, sizes=(20, 200))
+                ax.set_title("Clustering Berdasarkan Wilayah dan Jenis Kriminalitas")
+                ax.set_xlabel("Wilayah (Encoded)")
+                ax.set_ylabel("Jenis Kriminalitas (Encoded)")
+                st.pyplot(fig)
+
+                # Buat tabel keterangan kode wilayah dan jenis kriminalitas
+                st.subheader("Keterangan Kode Wilayah dan Jenis Kriminalitas")
+                wilayah_map = pd.DataFrame({'Wilayah': total_pengaduan['wilayah'], 'Kode Wilayah': total_pengaduan['wilayah_encoded']}).drop_duplicates().sort_values(by='Kode Wilayah')
+                kriminalitas_map = pd.DataFrame({'Jenis Kriminalitas': total_pengaduan['jenis_kriminal'], 'Kode Kriminalitas': total_pengaduan['jenis_kriminalitas_encoded']}).drop_duplicates().sort_values(by='Kode Kriminalitas')
+                st.write("Kode Wilayah:", wilayah_map)
+                st.write("Kode Jenis Kriminalitas:", kriminalitas_map)
+
+                describe = data_bersih.describe()
+                st.write(describe)
+
             # if 'wilayah' in data_bersih.columns and 'jumlah_pengaduan' in data_bersih.columns:
             #     data_bersih = data_bersih[['wilayah', 'jumlah_pengaduan']]
 
@@ -161,21 +199,19 @@ with tab2:
         else:
             st.warning("Silakan unggah file CSV terlebih dahulu")
 
-# Tab 3: Visualisasi
-# with tab3:
-    # if data is not None:
-    #     columns = data.columns.tolist()
-    #     x_axis1 = st.selectbox("Pilih x-axis:", options=columns, index=None)
-    #     y_axis1 = st.selectbox("Pilih y-axis:", options=columns, index=None)
-    
-    #     plt.figure(figsize=(10, 6))
-    #     plt.plot(x_axis1, y_axis1, marker='o', color='b', label='Sine Wave')
-    #     plt.xlabel('X-axis')
-    #     plt.ylabel('Y-axis')
-    #     plt.title('Contoh Grafik Garis')
-    #     plt.legend()
-    #     plt.grid(True)
-    #     plt.show()
+# Tab 4 : Visualisasi
+with tab4:
+    pilih_visualisasi = st.selectbox(
+        "Pilih visualisasi:",
+        ["Trend waktu pengaduan", "Asal Pengaduan", "Trend Jenis Kriminalitas"]
+    )
 
-    # else:
-    #     st.warning("Silakan unggah file CSV terlebih dahulu")
+    # pilih_visualisasi = st.selectbox(
+    #     "Pilih wilayah:",
+    #     # data_bersih['wilayah']
+    # )
+
+        # if data_bersih is not None:
+        # sd
+        # else:
+        # st.warning("Silakan unggah file CSV terlebih dahulu")
