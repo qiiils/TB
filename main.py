@@ -20,7 +20,6 @@ data = st.file_uploader("Upload data CSV kamu", type="csv")
 if "data_bersih" not in st.session_state:
     st.session_state.data_bersih = None
 
-
 if data is not None:
     try:
         data = pd.read_csv(data)
@@ -120,7 +119,7 @@ with tab3:
             my_bar.empty() 
 
             if 'wilayah' in data_bersih.columns and 'jenis_kriminal' in data_bersih.columns and 'jumlah_pengaduan' in data_bersih.columns:
-                # Aggregate data for clustering
+                # Aggregate data untuk clustering
                 total_pengaduan = data_bersih.groupby(['wilayah', 'jenis_kriminal'], as_index=False)['jumlah_pengaduan'].sum()
 
                 # Label Encoding -------------------------------------------------------------------
@@ -133,7 +132,7 @@ with tab3:
                 X = total_pengaduan[['wilayah_encoded', 'jumlah_pengaduan']]
 
                 # Pilih berapa banyak cluster -------------------------------------------------------------------
-                num_clusters = st.slider("Pilih jumlah cluster", 2, 10, 3)
+                num_clusters = st.slider("Pilih jumlah cluster", 2, 4, 3)
 
                 # Apply KMeans -------------------------------------------------------------------
                 kmeans = KMeans(n_clusters=num_clusters, random_state=0)
@@ -162,18 +161,31 @@ with tab3:
                 st.write("Kode Jenis Kriminalitas:", kriminalitas_map)
 
                 # Observasi Clustering ---------------------------------------------------------
-                st.subheader("Observasi Clustering (3 cluster)")
-                st.write(" - Kluster 0 (ungu tua): Berisi kombinasi wilayah dan jenis kriminalitas yang umumnya memiliki jumlah laporan moderat hingga rendah, terlihat dari ukuran titik yang lebih kecil.")
-                st.write(" - Kluster 1 (tosca): Pada beberapa titik, kluster ini memiliki ukuran yang lebih besar, yang menunjukkan wilayah dan jenis kriminalitas dengan jumlah laporan yang tinggi.")
-                st.write(" - Kluster 2 (kuning): Titik-titik dalam kluster ini lebih banyak tersebar dan umumnya memiliki ukuran yang lebih kecil, menunjukkan kombinasi wilayah dan jenis kriminalitas dengan jumlah laporan yang lebih rendah.")
-
+                # 2 cluster -------------------------------------------------------------------
+                if num_clusters == 2: 
+                    st.subheader("Observasi Clustering")
+                    st.write(" - Kluster 0 (ungu tua): Berisi kombinasi wilayah dan jenis kriminalitas yang umumnya memiliki jumlah laporan moderat hingga rendah, terlihat dari ukuran titik yang lebih kecil.")
+                    st.write(" - Kluster 1 (tosca): Pada beberapa titik, kluster ini memiliki ukuran yang lebih besar, yang menunjukkan wilayah dan jenis kriminalitas dengan jumlah laporan yang tinggi.")
+                # 3 cluster -------------------------------------------------------------------
+                elif num_clusters == 3:
+                    st.subheader("Observasi Clustering")
+                    st.write(" - Kluster 0 (ungu tua): Berisi kombinasi wilayah dan jenis kriminalitas yang umumnya memiliki jumlah laporan moderat hingga rendah, terlihat dari ukuran titik yang lebih kecil.")
+                    st.write(" - Kluster 1 (tosca): Pada beberapa titik, kluster ini memiliki ukuran yang lebih besar, yang menunjukkan wilayah dan jenis kriminalitas dengan jumlah laporan yang tinggi.")
+                    st.write(" - Kluster 2 (kuning): Titik-titik dalam kluster ini lebih banyak tersebar dan umumnya memiliki ukuran yang lebih kecil, menunjukkan kombinasi wilayah dan jenis kriminalitas dengan jumlah laporan yang lebih rendah.")
+                # 4 cluster -------------------------------------------------------------------
+                else:
+                    st.subheader("Observasi Clustering")
+                    st.write(" - Kluster 0 (ungu tua): Berisi kombinasi wilayah dan jenis kriminalitas yang umumnya memiliki jumlah laporan moderat hingga rendah, terlihat dari ukuran titik yang lebih kecil.")
+                    st.write(" - Kluster 1 (tosca): Pada beberapa titik, kluster ini memiliki ukuran yang lebih besar, yang menunjukkan wilayah dan jenis kriminalitas dengan jumlah laporan yang tinggi.")
+                    st.write(" - Kluster 2 (ungu tua): Berisi kombinasi wilayah dan jenis kriminalitas yang umumnya memiliki jumlah laporan moderat hingga rendah, terlihat dari ukuran titik yang lebih kecil.")
+                    st.write(" - Kluster 3 (tosca): Pada beberapa titik, kluster ini memiliki ukuran yang lebih besar, yang menunjukkan wilayah dan jenis kriminalitas dengan jumlah laporan yang tinggi.")
             else:
                 st.error("File CSV tidak memiliki kolom 'wilayah', 'jenis_kriminal', dan 'jumlah_pengaduan' yang diperlukan.")
         else:
             st.warning("Silakan unggah file CSV terlebih dahulu")
 
            
-# Tab 4 : Visualisasi
+# Tab 4 : Visualisasi -------------------------------------------------------------------
 with tab4:
     if "data_bersih" in st.session_state and st.session_state["data_bersih"] is not None:
         data_bersih = st.session_state["data_bersih"]
@@ -184,7 +196,7 @@ with tab4:
         x_axis = st.selectbox("Pilih X-axis:", x_axis_options)
         y_axis = st.selectbox("Pilih Y-axis:", y_axis_options)
         
-        # Pilihan jenis visualisasi
+        # Pilihan jenis visualisasi -------------------------------------------------------------------
         pilih_visualisasi = st.selectbox(
             "Pilih jenis visualisasi:",
             ["Jumlah Pengaduan per Tahun", "Jumlah Pengaduan berdasarkan Wilayah", 
@@ -203,6 +215,7 @@ with tab4:
             else:
                 st.warning("Pilih 'periode_data' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
         
+        #Pilihan: Jumlah Pengaduan Berdasarkan Wilayah -------------------------------------------------------------------
         elif pilih_visualisasi == "Jumlah Pengaduan berdasarkan Wilayah":
             if x_axis == "wilayah" and y_axis == "jumlah_pengaduan":
                 data_grouped = data_bersih.groupby(x_axis)[y_axis].sum().reset_index()
@@ -216,6 +229,7 @@ with tab4:
             else:
                 st.warning("Pilih 'wilayah' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
         
+        #Pilihan: Distribusi Jenis Kriminal -------------------------------------------------------------------
         elif pilih_visualisasi == "Distribusi Jenis Kriminal":
             if x_axis == "jenis_kriminal" and y_axis == "jumlah_pengaduan":
                 data_grouped = data_bersih.groupby(x_axis)[y_axis].sum().reset_index()
@@ -229,6 +243,7 @@ with tab4:
             else:
                 st.warning("Pilih 'jenis_kriminal' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
         
+        #Pilihan: Asal Pengaduan per Jenis Kriminal -------------------------------------------------------------------
         elif pilih_visualisasi == "Asal Pengaduan per Jenis Kriminal":
             if x_axis == "asal_pengaduan" and y_axis == "jumlah_pengaduan":
                 data_grouped = data_bersih.groupby(x_axis)[y_axis].sum().reset_index()
@@ -242,15 +257,16 @@ with tab4:
             else:
                 st.warning("Pilih 'asal_pengaduan' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
 
+        #Pilihan: Trend Bulanan Pengaduan -------------------------------------------------------------------
         elif pilih_visualisasi == "Trend Bulanan Pengaduan":
                 if x_axis == "tanggal_pengaduan" and y_axis == "jumlah_pengaduan":
-                    # Convert to datetime and extract month
+                    # Convert tanggal_pengaduan ke datetime -------------------------------------------------------------------
                     data_bersih['tanggal_pengaduan'] = pd.to_datetime(data_bersih['tanggal_pengaduan'], errors='coerce')
                     data_bersih['bulan_pengaduan'] = data_bersih['tanggal_pengaduan'].dt.month
                     
                     trend_bulanan = data_bersih.groupby("bulan_pengaduan")[y_axis].sum().reset_index()
 
-                    # Visualisasi
+                    # Visualisasi -------------------------------------------------------------------
                     fig, ax = plt.subplots(figsize=(10, 6))
                     sns.lineplot(data=trend_bulanan, x="bulan_pengaduan", y=y_axis, marker="o", ax=ax)
                     ax.set_title("Trend Pengaduan Bulanan")
