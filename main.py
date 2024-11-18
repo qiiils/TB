@@ -16,12 +16,15 @@ Kelompok 9 - Akuisisi Data B
 
 # Deklarasi -------------------------------------------------------------------
 data = st.file_uploader("Upload data CSV kamu", type="csv")
-data_bersih = None
+
+if "data_bersih" not in st.session_state:
+    st.session_state.data_bersih = None
 
 
 if data is not None:
     try:
         data = pd.read_csv(data)
+        data_bersih = data.dropna().fillna(0)
     except Exception as e:
         st.error(f"Error membaca file: {str(e)}")
 
@@ -33,12 +36,6 @@ with tab1:
         if data is not None:
             st.write("Data preview:")
             st.dataframe(data)
-            # buffer = io.StringIO()
-            # data.info(buf=buffer)
-            # s = buffer.getvalue()
-            # st.text(s)  
-            # st.text(buffer)
-
         else:
             st.warning("Silakan unggah file CSV terlebih dahulu")
 
@@ -93,7 +90,7 @@ with tab2:
             my_bar.empty()
 
             #Drop baris kosong dan tampilkan -------------------------------------------------------------------
-            data_bersih = data.dropna().fillna(0)
+            # data_bersih = data.dropna().fillna(0)
             st.subheader("Data sudah dibersihkan!")
             st.dataframe(data_bersih)
 
