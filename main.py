@@ -221,6 +221,24 @@ with tab3:
                     st.write(" - Kluster 1 (biru tua): Ukuran bar pada kluster ini lebih tinggi dibandingkan dengan kluster lainnya, menandakan bahwa jumlah pengaduan yang ada pada wilayah yang memiliki kluster 1 tergolong relatif tinggi.")
                     st.write(" - Kluster 2 (tosca): Bar dengan penyebaran yang lebih banyak dibandingkan bar kluster lain, dengan ukuran yang beragam namun tidak mencapai di atas 5 pengaduan, tetapi sebagian besar berukuran kecil. Hal ini menunjukkan bahwa kombinasi wilayah dan jenis kriminalitas dalam kluster ini umumnya memiliki jumlah laporan yang lebih rendah, meskipun tersebar hampir merata di beberapa wilayah.")
                     st.write(" - Kluster 3 (kuning): Bar dalam kluster ini tidak memilki perbedaan ukuran bar yang signifikan, hampir sama.")
+
+                    st.subheader("Cluster Ideal?")
+                    inertia = []
+                    k_values = range(1, 11)
+                    for k in k_values:
+                        kmeans = KMeans(n_clusters=k, random_state=42, n_init='auto')
+                        kmeans.fit(X)
+                        inertia.append(kmeans.inertia_)
+
+                    # Plot the Elbow curve
+                    plt.figure(figsize=(8, 5))
+                    plt.plot(k_values, inertia, marker='o', linestyle='-')
+                    plt.title('Elbow Method for Optimal K')
+                    plt.xlabel('Number of Clusters (k)')
+                    plt.ylabel('Inertia')
+                    st.pyplot(plt)
+
+                    st.write("Berdasarkan grafik Elbow Method, jumlah klaster optimal berada di titik di mana kurva mulai melandai.")
             else:
                 st.error("File CSV tidak memiliki kolom 'wilayah', 'jenis_kriminal', dan 'jumlah_pengaduan' yang diperlukan.")
         else:
