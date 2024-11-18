@@ -175,84 +175,90 @@ with tab3:
            
 # Tab 4 : Visualisasi
 with tab4:
-    data_bersih['tanggal_pengaduan'] = pd.to_datetime(data_bersih['tanggal_pengaduan'], errors='coerce')
-    data_bersih['bulan_pengaduan'] = data_bersih['tanggal_pengaduan'].dt.month
+    if "data_bersih" in st.session_state and st.session_state["data_bersih"] is not None:
+        data_bersih = st.session_state["data_bersih"]
 
-    x_axis_options = ["periode_data", "wilayah", "jenis_kriminal", "asal_pengaduan", "tanggal_pengaduan"]
-    y_axis_options = ["jumlah_pengaduan"]
-    
-    x_axis = st.selectbox("Pilih X-axis:", x_axis_options)
-    y_axis = st.selectbox("Pilih Y-axis:", y_axis_options)
-    
-    # Pilihan jenis visualisasi
-    pilih_visualisasi = st.selectbox(
-        "Pilih jenis visualisasi:",
-        ["Jumlah Pengaduan per Tahun", "Jumlah Pengaduan berdasarkan Wilayah", 
-         "Distribusi Jenis Kriminal", "Asal Pengaduan per Jenis Kriminal", "Trend Bulanan Pengaduan"]
-    )
+        x_axis_options = ["periode_data", "wilayah", "jenis_kriminal", "asal_pengaduan", "tanggal_pengaduan"]
+        y_axis_options = ["jumlah_pengaduan"]
+        
+        x_axis = st.selectbox("Pilih X-axis:", x_axis_options)
+        y_axis = st.selectbox("Pilih Y-axis:", y_axis_options)
+        
+        # Pilihan jenis visualisasi
+        pilih_visualisasi = st.selectbox(
+            "Pilih jenis visualisasi:",
+            ["Jumlah Pengaduan per Tahun", "Jumlah Pengaduan berdasarkan Wilayah", 
+            "Distribusi Jenis Kriminal", "Asal Pengaduan per Jenis Kriminal", "Trend Bulanan Pengaduan"]
+        )
 
-    if pilih_visualisasi == "Jumlah Pengaduan per Tahun":
-        if x_axis == "periode_data" and y_axis == "jumlah_pengaduan":
-            data_grouped = data.groupby(x_axis)[y_axis].sum().reset_index()
-            fig, ax = plt.subplots()
-            ax.plot(data_grouped[x_axis], data_grouped[y_axis], marker='o', linestyle='-')
-            ax.set_title("Jumlah Pengaduan per Tahun")
-            ax.set_xlabel("Tahun")
-            ax.set_ylabel("Jumlah Pengaduan")
-            st.pyplot(fig)
-        else:
-            st.warning("Pilih 'periode_data' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
-    
-    elif pilih_visualisasi == "Jumlah Pengaduan berdasarkan Wilayah":
-        if x_axis == "wilayah" and y_axis == "jumlah_pengaduan":
-            data_grouped = data.groupby(x_axis)[y_axis].sum().reset_index()
-            fig, ax = plt.subplots()
-            ax.bar(data_grouped[x_axis], data_grouped[y_axis], color='skyblue')
-            ax.set_title("Jumlah Pengaduan berdasarkan Wilayah")
-            ax.set_xlabel("Wilayah")
-            ax.set_ylabel("Jumlah Pengaduan")
-            ax.set_xticklabels(data_grouped[x_axis], rotation=45, ha="right")
-            st.pyplot(fig)
-        else:
-            st.warning("Pilih 'wilayah' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
-    
-    elif pilih_visualisasi == "Distribusi Jenis Kriminal":
-        if x_axis == "jenis_kriminal" and y_axis == "jumlah_pengaduan":
-            data_grouped = data.groupby(x_axis)[y_axis].sum().reset_index()
-            fig, ax = plt.subplots()
-            ax.bar(data_grouped[x_axis], data_grouped[y_axis], color='salmon')
-            ax.set_title("Distribusi Jenis Kriminal")
-            ax.set_xlabel("Jenis Kriminal")
-            ax.set_ylabel("Jumlah Pengaduan")
-            ax.set_xticklabels(data_grouped[x_axis], rotation=45, ha="right")
-            st.pyplot(fig)
-        else:
-            st.warning("Pilih 'jenis_kriminal' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
-    
-    elif pilih_visualisasi == "Asal Pengaduan per Jenis Kriminal":
-        if x_axis == "asal_pengaduan" and y_axis == "jumlah_pengaduan":
-            data_grouped = data.groupby(x_axis)[y_axis].sum().reset_index()
-            fig, ax = plt.subplots()
-            ax.bar(data_grouped[x_axis], data_grouped[y_axis], color='green')
-            ax.set_title("Asal Pengaduan per Jenis Kriminal")
-            ax.set_xlabel("Asal Pengaduan")
-            ax.set_ylabel("Jumlah Pengaduan")
-            ax.set_xticklabels(data_grouped[x_axis], rotation=45, ha="right")
-            st.pyplot(fig)
-        else:
-            st.warning("Pilih 'asal_pengaduan' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
+        if pilih_visualisasi == "Jumlah Pengaduan per Tahun":
+            if x_axis == "periode_data" and y_axis == "jumlah_pengaduan":
+                data_grouped = data_bersih.groupby(x_axis)[y_axis].sum().reset_index()
+                fig, ax = plt.subplots()
+                ax.plot(data_grouped[x_axis], data_grouped[y_axis], marker='o', linestyle='-')
+                ax.set_title("Jumlah Pengaduan per Tahun")
+                ax.set_xlabel("Tahun")
+                ax.set_ylabel("Jumlah Pengaduan")
+                st.pyplot(fig)
+            else:
+                st.warning("Pilih 'periode_data' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
+        
+        elif pilih_visualisasi == "Jumlah Pengaduan berdasarkan Wilayah":
+            if x_axis == "wilayah" and y_axis == "jumlah_pengaduan":
+                data_grouped = data_bersih.groupby(x_axis)[y_axis].sum().reset_index()
+                fig, ax = plt.subplots()
+                ax.bar(data_grouped[x_axis], data_grouped[y_axis], color='skyblue')
+                ax.set_title("Jumlah Pengaduan berdasarkan Wilayah")
+                ax.set_xlabel("Wilayah")
+                ax.set_ylabel("Jumlah Pengaduan")
+                ax.set_xticklabels(data_grouped[x_axis], rotation=45, ha="right")
+                st.pyplot(fig)
+            else:
+                st.warning("Pilih 'wilayah' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
+        
+        elif pilih_visualisasi == "Distribusi Jenis Kriminal":
+            if x_axis == "jenis_kriminal" and y_axis == "jumlah_pengaduan":
+                data_grouped = data_bersih.groupby(x_axis)[y_axis].sum().reset_index()
+                fig, ax = plt.subplots()
+                ax.bar(data_grouped[x_axis], data_grouped[y_axis], color='salmon')
+                ax.set_title("Distribusi Jenis Kriminal")
+                ax.set_xlabel("Jenis Kriminal")
+                ax.set_ylabel("Jumlah Pengaduan")
+                ax.set_xticklabels(data_grouped[x_axis], rotation=45, ha="right")
+                st.pyplot(fig)
+            else:
+                st.warning("Pilih 'jenis_kriminal' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
+        
+        elif pilih_visualisasi == "Asal Pengaduan per Jenis Kriminal":
+            if x_axis == "asal_pengaduan" and y_axis == "jumlah_pengaduan":
+                data_grouped = data_bersih.groupby(x_axis)[y_axis].sum().reset_index()
+                fig, ax = plt.subplots()
+                ax.bar(data_grouped[x_axis], data_grouped[y_axis], color='green')
+                ax.set_title("Asal Pengaduan per Jenis Kriminal")
+                ax.set_xlabel("Asal Pengaduan")
+                ax.set_ylabel("Jumlah Pengaduan")
+                ax.set_xticklabels(data_grouped[x_axis], rotation=45, ha="right")
+                st.pyplot(fig)
+            else:
+                st.warning("Pilih 'asal_pengaduan' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
 
-    elif pilih_visualisasi == "Trend Bulanan Pengaduan":
-        if x_axis == "tanggal_pengaduan" and y_axis == "jumlah_pengaduan":
-            # Menghitung jumlah pengaduan per bulan
-            trend_bulanan = data_bersih.groupby("bulan_pengaduan")[y_axis].sum().reset_index()
-            
-            # Visualisasi
-            fig, ax = plt.subplots(figsize=(10, 6))
-            sns.lineplot(data=trend_bulanan, x="bulan_pengaduan", y=y_axis, marker="o", ax=ax)
-            ax.set_title("Trend Pengaduan Bulanan")
-            ax.set_xlabel("Bulan")
-            ax.set_ylabel("Jumlah Pengaduan")
-            st.pyplot(fig)
-        else:
-            st.warning("Pilih 'tanggal_pengaduan' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
+        elif pilih_visualisasi == "Trend Bulanan Pengaduan":
+                if x_axis == "tanggal_pengaduan" and y_axis == "jumlah_pengaduan":
+                    # Convert to datetime and extract month
+                    data_bersih['tanggal_pengaduan'] = pd.to_datetime(data_bersih['tanggal_pengaduan'], errors='coerce')
+                    data_bersih['bulan_pengaduan'] = data_bersih['tanggal_pengaduan'].dt.month
+                    
+                    trend_bulanan = data_bersih.groupby("bulan_pengaduan")[y_axis].sum().reset_index()
+
+                    # Visualisasi
+                    fig, ax = plt.subplots(figsize=(10, 6))
+                    sns.lineplot(data=trend_bulanan, x="bulan_pengaduan", y=y_axis, marker="o", ax=ax)
+                    ax.set_title("Trend Pengaduan Bulanan")
+                    ax.set_xlabel("Bulan")
+                    ax.set_ylabel("Jumlah Pengaduan")
+                    st.pyplot(fig)
+                else:
+                    st.warning("Pilih 'tanggal_pengaduan' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
+
+    else:
+        st.warning("Silakan unggah file CSV terlebih dahulu")
