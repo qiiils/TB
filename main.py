@@ -206,21 +206,21 @@ with tab3:
                 # 2 cluster -------------------------------------------------------------------
                 if num_clusters == 2: 
                     st.subheader("Observasi Clustering")
-                    st.write(" - Kluster 0 (biru tua): Bar dalam kluster ini memiliki ukuran yang lebih pendek, hal ini mengindikasikan wilayah dan jenis kriminalitas dengan jumlah laporan yang rendah hingga moderat. Titik-titik tersebar di berbagai kombinasi wilayah dan jenis kriminalitas, menunjukkan variasi yang luas.")
-                    st.write(" - Kluster 1 (tosca): Kluster ini memiliki beberapa titik dengan ukuran yang lebih besar, mengindikasikan wilayah dan jenis kriminalitas dengan jumlah laporan yang relatif tinggi. Titik-titik terkonsentrasi di kombinasi wilayah dan jenis kriminalitas tertentu, menunjukkan pola yang lebih terfokus dibandingkan dengan kluster 0.")
+                    st.write(" - Kluster 0 (biru tua): Bar dalam kluster ini memiliki ukuran yang lebih pendek, hal ini mengindikasikan wilayah dan jenis kriminalitas dengan jumlah laporan yang rendah hingga moderat.")
+                    st.write(" - Kluster 1 (tosca): Kluster ini memiliki bar dengan ukuran yang lebih tinggi, mengindikasikan wilayah dan jenis kriminalitas dengan jumlah laporan yang relatif tinggi.")
                 # 3 cluster -------------------------------------------------------------------
                 elif num_clusters == 3:
                     st.subheader("Observasi Clustering")
-                    st.write(" - Kluster 0 (ungu tua): Berisi kombinasi wilayah dan jenis kriminalitas yang umumnya memiliki jumlah laporan moderat hingga rendah, terlihat dari ukuran titik yang lebih kecil.")
-                    st.write(" - Kluster 1 (tosca): Pada beberapa titik, kluster ini memiliki ukuran yang lebih besar, yang menunjukkan wilayah dan jenis kriminalitas dengan jumlah laporan yang tinggi.")
-                    st.write(" - Kluster 2 (kuning): Titik-titik dalam kluster ini lebih banyak tersebar dan umumnya memiliki ukuran yang lebih kecil, menunjukkan kombinasi wilayah dan jenis kriminalitas dengan jumlah laporan yang lebih rendah.")
+                    st.write(" - Kluster 0 (ungu tua): Berisi kombinasi wilayah dan jenis kriminalitas yang umumnya memiliki jumlah laporan moderat hingga rendah, terlihat dari ukuran bar yang agak pendek/menengah.")
+                    st.write(" - Kluster 1 (tosca): Pada kluster ini, bar memiliki ukuran yang lebih tinggi dari kluster lainnya, yang menunjukkan wilayah dan jenis kriminalitas dengan jumlah laporan yang tinggi.")
+                    st.write(" - Kluster 2 (kuning): Bar dalam kluster ini lebih banyak tersebar dan umumnya memiliki ukuran yang lebih pendek, menunjukkan kombinasi wilayah dan jenis kriminalitas dengan jumlah laporan yang lebih rendah.")
                 # 4 cluster -------------------------------------------------------------------
                 else:
                     st.subheader("Observasi Clustering")
-                    st.write(" - Kluster 0 (ungu tua): Titik-titik dalam kluster ini memiliki ukuran kecil, yang menunjukkan bahwa wilayah dan jenis kriminalitas yang termasuk dalam kelompok ini memiliki jumlah pengaduan yang lebih sedikit dibandingkan kluster lainnya.")
-                    st.write(" - Kluster 1 (biru tua): didominasi oleh titik-titik dengan ukuran yang lebih besar, mengindikasikan wilayah dan jenis kriminalitas dengan jumlah laporan yang lebih tinggi. Pola dalam kluster ini lebih terkonsentrasi pada wilayah tertentu, sehingga menunjukkan adanya permasalahan kriminalitas yang lebih signifikan di area tersebut.")
-                    st.write(" - Kluster 2 (tosca): Titik-titik yang tersebar luas dengan ukuran yang beragam, tetapi sebagian besar berukuran kecil. Hal ini menunjukkan bahwa kombinasi wilayah dan jenis kriminalitas dalam kluster ini umumnya memiliki jumlah laporan yang lebih rendah, meskipun tersebar merata di beberapa wilayah.")
-                    st.write(" - Kluster 3 (kuning): Beberapa titik dalam kluster ini berukuran besar, menunjukkan adanya wilayah tertentu dengan tingkat kriminalitas yang lebih tinggi, sedangkan titik lainnya lebih kecil, mengindikasikan laporan yang lebih sedikit di area lainnya.")
+                    st.write(" - Kluster 0 (ungu tua): Bar pada kluster ini memiliki ukuran menengah, yang menunjukkan bahwa wilayah dan jenis kriminalitas yang termasuk dalam kelompok ini memiliki jumlah pengaduan yang lebih sedikit dibandingkan kluster tertinggi, namun lebih banyak daripada kluster lain.")
+                    st.write(" - Kluster 1 (biru tua): Ukuran bar pada kluster ini lebih tinggi dibandingkan dengan kluster lainnya, menandakan bahwa jumlah pengaduan yang ada pada wilayah yang memiliki kluster 1 tergolong relatif tinggi.")
+                    st.write(" - Kluster 2 (tosca): Bar dengan penyebaran yang lebih banyak dibandingkan bar kluster lain, dengan ukuran yang beragam namun tidak mencapai di atas 5 pengaduan, tetapi sebagian besar berukuran kecil. Hal ini menunjukkan bahwa kombinasi wilayah dan jenis kriminalitas dalam kluster ini umumnya memiliki jumlah laporan yang lebih rendah, meskipun tersebar hampir merata di beberapa wilayah.")
+                    st.write(" - Kluster 3 (kuning): Bar dalam kluster ini tidak memilki perbedaan ukuran bar yang signifikan, hampir sama.")
             else:
                 st.error("File CSV tidak memiliki kolom 'wilayah', 'jenis_kriminal', dan 'jumlah_pengaduan' yang diperlukan.")
         else:
@@ -255,9 +255,6 @@ with tab4:
                 ax.set_xlabel("Tahun")
                 ax.set_ylabel("Jumlah Pengaduan")
                 st.pyplot(fig)
-
-                st.write("Penjelasan: ")
-                st.write("")
             else:
                 st.warning("Pilih 'periode_data' sebagai X-axis dan 'jumlah_pengaduan' sebagai Y-axis untuk visualisasi ini.")
         
