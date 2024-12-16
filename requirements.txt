@@ -4,3 +4,4 @@ seaborn
 mlxtend
 prophet
 plotly
+scipy
