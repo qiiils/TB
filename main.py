@@ -78,10 +78,9 @@ def main():
         df = load_and_preprocess_data(data)
         
         # Tabs
-        tab1, tab2, tab3, tab4 = st.tabs([
+        tab1, tab2, tab3, = st.tabs([
             "Data Overview", 
-            "Time Series Analysis", 
-            "Association Analysis",
+            "Time Series Analysis",
             "Statistical Insights"
         ])
         
@@ -149,7 +148,7 @@ def main():
         #     st.plotly_chart(fig)
         
         # Tab 4: Statistical Insights
-        with tab4:
+        with tab3:
             st.header("Insight Statistik")
             
             # Crime trends over time
