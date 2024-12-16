@@ -132,21 +132,21 @@ def main():
             plt.legend()
             st.pyplot(fig)
         
-        # Tab 3: Association Analysis
-        with tab3:
-            st.header("Analisis Asosiasi")
+        # # Tab 3: Association Analysis
+        # with tab3:
+        #     st.header("Analisis Asosiasi")
             
-            transaction_data = prepare_transaction_data(df)
-            rules = mine_association_rules(transaction_data)
+        #     transaction_data = prepare_transaction_data(df)
+        #     rules = mine_association_rules(transaction_data)
             
-            st.write("Association Rules yang Ditemukan:")
-            st.dataframe(rules)
+        #     st.write("Association Rules yang Ditemukan:")
+        #     st.dataframe(rules)
             
-            # Visualize rules
-            fig = px.scatter(rules, x='support', y='confidence',
-                           size='lift', color='lift',
-                           title='Association Rules Visualization')
-            st.plotly_chart(fig)
+        #     # Visualize rules
+        #     fig = px.scatter(rules, x='support', y='confidence',
+        #                    size='lift', color='lift',
+        #                    title='Association Rules Visualization')
+        #     st.plotly_chart(fig)
         
         # Tab 4: Statistical Insights
         with tab4:
