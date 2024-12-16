@@ -165,14 +165,14 @@ def main():
             st.plotly_chart(fig)
             
             # Statistical tests
-            st.subheader("Uji Chi-Square: Hubungan antara Wilayah dan Jenis Kriminal")
-            contingency_table = pd.crosstab(df['wilayah'], df['jenis_kriminal'])
-            chi2, p_value, dof, expected = chi2_contingency(contingency_table)
-            st.write(f"P-value: {p_value:.4f}")
-            if p_value < 0.05:
-                st.write("Terdapat hubungan signifikan antara wilayah dan jenis kriminal")
-            else:
-                st.write("Tidak terdapat hubungan signifikan antara wilayah dan jenis kriminal")
+            # st.subheader("Uji Chi-Square: Hubungan antara Wilayah dan Jenis Kriminal")
+            # contingency_table = pd.crosstab(df['wilayah'], df['jenis_kriminal'])
+            # chi2, p_value, dof, expected = chi2_contingency(contingency_table)
+            # st.write(f"P-value: {p_value:.4f}")
+            # if p_value < 0.05:
+            #     st.write("Terdapat hubungan signifikan antara wilayah dan jenis kriminal")
+            # else:
+            #     st.write("Tidak terdapat hubungan signifikan antara wilayah dan jenis kriminal")
 
 if __name__ == "__main__":
     main()
