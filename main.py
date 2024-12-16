@@ -89,7 +89,7 @@ def main():
         with tab1:
             st.header("Overview Data")
             st.write("Preview Dataset:")
-            st.dataframe(df.head())
+            st.dataframe(df)
             
             st.subheader("Statistik Deskriptif")
             st.write(df.describe())
